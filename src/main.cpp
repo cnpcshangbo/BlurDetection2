@@ -25,8 +25,25 @@ int main(int argc, char** argv )
     namedWindow("Grey Image", WINDOW_AUTOSIZE );
     imshow("Grey Image", greyMat);
 
-    cv::Mat blur_map = cv2::Laplacian(greyMat, cv2.CV_64F);
+    cv::Mat laplacianImage;
+    cv::Laplacian(greyMat, laplacianImage, CV_64F);
 
+    // Prepare to compute the mean and standard deviation of the laplacian:
+    // https://stackoverflow.com/questions/60587428/how-to-detect-blur-rate-of-a-face-effectively-in-c
+    cv::Scalar mean, stddev; 
+    cv::meanStdDev( laplacianImage, mean, stddev, cv::Mat() );
+
+    //Let’s compute the variance:
+    double variance = stddev.val[0] * stddev.val[0];
+    cout << "variance = " << variance << endl;
+
+    double blurThreshold = 300;
+
+    if ( variance <= blurThreshold ) {
+        std::cout<<"Input image is blurry!"<<std::endl;
+    } else {
+        std::cout<<"Input image is sharp"<<std::endl;
+    }
     waitKey(0);
     return 0;
 }
