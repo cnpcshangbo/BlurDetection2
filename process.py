@@ -5,6 +5,7 @@ import pathlib
 import json
 
 import cv2
+import time
 
 from blur_detection import estimate_blur
 from blur_detection import fix_image_size
@@ -77,7 +78,7 @@ if __name__ == '__main__':
         blur_map, score, blurry = estimate_blur(image, threshold=args.threshold)
 
         logging.info(f'image_path: {image_path} score: {score} blurry: {blurry}')
-        results.append({'input_path': str(image_path), 'score': score, 'blurry': blurry})
+        results.append({'input_path': str(image_path), 'score': score, 'blurry': blurry, 'time': time.time()})
 
         if args.display:
             cv2.imshow('input', image)
