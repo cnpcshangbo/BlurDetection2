@@ -5,6 +5,12 @@
 #include <iostream>
 #include <filesystem>
 
+#include <iomanip>
+#include <nlohmann/json.hpp>
+#include <chrono>
+
+using json = nlohmann::json;
+
 using namespace cv;
 using namespace std;
 namespace fs = std::filesystem;
@@ -75,6 +81,7 @@ int main(int argc, char** argv )
 
     string foldername = "/usr/local/home/bsr8w/code/Monocular-Visual-Odometry/data/vid2img_extra_small/";
     string filename;
+    json j;
     if ( argc != 2 )
     {
         printf("usage: DisplayImage.out <Image_Path> eg: /usr/local/home/bsr8w/code/Monocular-Visual-Odometry/data/vid2img_extra_small/rgb_00001.jpg\n");
@@ -89,18 +96,28 @@ int main(int argc, char** argv )
         //     std::cout << dir_entry << '\n';
         // }
         std::cout << "-----------------------------\n";
+        
         // Iterate over the `std::filesystem::directory_entry` elements using `auto`
         for (auto const& dir_entry : fs::recursive_directory_iterator(foldername))
         {
             string filename = dir_entry.path();
             std::cout << filename << '\n';
+            double score = blur_detection(filename);
             cout << blur_detection(filename) << endl;
+            const auto p1 = std::chrono::system_clock::now();
+            j[filename] = {score, std::chrono::duration_cast<std::chrono::seconds>(
+                   p1.time_since_epoch()).count()};
+
         }
     
     }
 
     
-
+    // pretty print with indent of 4 spaces
+    std::cout << std::setw(4) << j << '\n';
+    // write prettified JSON to another file
+    std::ofstream o("pretty.json");
+    o << std::setw(4) << j << std::endl;
     waitKey(0);
     return 0;
 }
