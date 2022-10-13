@@ -16,3 +16,6 @@ target_link_libraries( DisplayImage ${OpenCV_LIBS} )
 
 add_executable( main src/main.cpp )
 target_link_libraries( main ${OpenCV_LIBS} )
+
+add_executable( test_filesystem src/test_filesystem.cpp )
+target_link_libraries( test_filesystem ${OpenCV_LIBS} )

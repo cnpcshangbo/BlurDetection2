@@ -9,7 +9,7 @@ using namespace cv;
 using namespace std;
 namespace fs = std::filesystem;
 
-double blur_detection(string filename){
+double blur_detection(const string& filename){
     Mat image;
     image = imread( filename, 1 );
     if ( !image.data )
@@ -82,22 +82,24 @@ int main(int argc, char** argv )
         filename = "/usr/local/home/bsr8w/code/Monocular-Visual-Odometry/data/vid2img_extra_small/rgb_00001.jpg";
         // return -1;
         
-        // Iterate over the `std::filesystem::directory_entry` elements explicitly
-        for (const fs::directory_entry& dir_entry : 
-            fs::recursive_directory_iterator(foldername))
-        {
-            std::cout << dir_entry << '\n';
-        }
+        // // Iterate over the `std::filesystem::directory_entry` elements explicitly
+        // for (const fs::directory_entry& dir_entry : 
+        //     fs::recursive_directory_iterator(foldername))
+        // {
+        //     std::cout << dir_entry << '\n';
+        // }
         std::cout << "-----------------------------\n";
         // Iterate over the `std::filesystem::directory_entry` elements using `auto`
         for (auto const& dir_entry : fs::recursive_directory_iterator(foldername))
         {
-            std::cout << dir_entry << '\n';
+            string filename = dir_entry.path();
+            std::cout << filename << '\n';
+            cout << blur_detection(filename) << endl;
         }
     
     }
 
-    cout << blur_detection(filename) << endl;
+    
 
     waitKey(0);
     return 0;
