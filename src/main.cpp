@@ -103,10 +103,23 @@ int main(int argc, char** argv )
             string filename = dir_entry.path();
             std::cout << filename << '\n';
             double score = blur_detection(filename);
-            cout << blur_detection(filename) << endl;
+            cout << score << endl;
+            double blurThreshold = 300;
+            bool blurry;
+            if ( score <= blurThreshold ) {
+                std::cout<<"Input image is blurry!"<<std::endl;
+                blurry = true;
+            } else {
+                std::cout<<"Input image is sharp"<<std::endl;
+                blurry = false;
+            }
             const auto p1 = std::chrono::system_clock::now();
-            j[filename] = {score, std::chrono::duration_cast<std::chrono::seconds>(
-                   p1.time_since_epoch()).count()};
+            const auto time = std::chrono::duration_cast<std::chrono::seconds>(
+                   p1.time_since_epoch()).count();
+            // j["results"]["input_path"] = filename;
+            // j["results"]["score"] = score;
+            // j["results"]["time"] = time;
+            j["results"].push_back({{"input_path", filename}, {"score", score}, {"blurry", blurry}, {"time", time}});
 
         }
     
